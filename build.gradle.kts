@@ -15,11 +15,15 @@ defaultTasks = listOf("build", "publishToMavenLocal")
 repositories {
     mavenLocal()
     jcenter()
+    maven { url = uri("https://dl.bintray.com/neva-dev/maven-public") }
 }
 
 dependencies {
     implementation(gradleApi())
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.20")
+    implementation("org.apache.sling:org.apache.sling.scripting.sightly.runtime:1.1.0-1.4.0")
+    implementation("org.apache.sling:org.apache.sling.scripting.sightly.compiler:1.1.0-1.4.0")
+    implementation("org.apache.sling:org.apache.sling.scripting.sightly.compiler.java:1.1.0-1.4.0")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.1")
