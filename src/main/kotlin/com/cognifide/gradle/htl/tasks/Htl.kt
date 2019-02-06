@@ -39,16 +39,16 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
     private fun printCompilationResults(compilationResults: Map<File, CompilationResult>, time: Long) {
         var hasWarnings = false
         var hasErrors = false
-        compilationResults.forEach { _, result ->
+        compilationResults.forEach { script, result ->
             if (result.warnings.isNotEmpty()) {
                 result.warnings.forEach { message ->
-                    project.logger.warn("${message.scriptName}: (${message.line}, ${message.column}): warning: ${message.message}")
+                    project.logger.warn("w: ${script.path}: (${message.line}, ${message.column}): ${message.message}")
                 }
                 hasWarnings = true
             }
             if (result.errors.isNotEmpty()) {
                 result.errors.forEach { message ->
-                    project.logger.error("${message.scriptName}: (${message.line}, ${message.column}): error: ${message.message}")
+                    project.logger.error("e: ${script.path}: (${message.line}, ${message.column}): ${message.message}")
                 }
                 hasErrors = true
             }
