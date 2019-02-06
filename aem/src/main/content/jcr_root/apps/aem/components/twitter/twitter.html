@@ -1,0 +1,15 @@
+<sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html" />
+<sly data-sly-call="${clientlib.js @ categories='training.twitter'}" />
+
+<sly data-sly-use.model="com.cognifide.aem.training.core.twitter.TwitterModel"
+     data-sly-use.validationResult="${'com.cognifide.aem.commons.validation.impl.ValidationResultModel' @ model = model}"
+     data-sly-test="${validationResult.isValid}">
+
+  Tweet from: ${model.feed}
+  <div id="twitter-feed-container" data-feed="${model.feed}">
+  </div>
+
+</sly>
+<sly data-sly-test="${!validationResult.isValid && wcmmode.edit}"
+     data-sly-use.renderer="/apps/aem-commons/validation/components/displayValidationResult.html"
+     data-sly-call="${renderer.displayValidationResult @ validationResult = validationResult}"/>

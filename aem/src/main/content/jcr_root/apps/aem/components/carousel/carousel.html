@@ -1,0 +1,18 @@
+<sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html" />
+<sly data-sly-call="${clientlib.js @ categories='training.carousel'}" />
+
+<sly data-sly-use.model="com.cognifide.aem.training.core.carousel.CarouselModel"
+     data-sly-use.validationResult="${'com.cognifide.aem.commons.validation.impl.ValidationResultModel' @ model = model}"
+     data-sly-test="${validationResult.isValid}">
+
+  <button class="btn js-prev">prev</button>
+  <button class="btn js-next">next</button>
+
+  <div class="siema" data-sly-list.image="${model.images}">
+    <div><img src="${image.path}">${image.description}</div>
+  </div>
+
+</sly>
+<sly data-sly-test="${!validationResult.isValid && wcmmode.edit}"
+     data-sly-use.renderer="/apps/aem-commons/validation/components/displayValidationResult.html"
+     data-sly-call="${renderer.displayValidationResult @ validationResult = validationResult}"/>

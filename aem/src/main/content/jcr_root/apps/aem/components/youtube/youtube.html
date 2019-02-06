@@ -1,0 +1,16 @@
+<sly data-sly-use.model="com.cognifide.aem.training.core.youtube.YoutubeModel"
+       data-sly-use.validationResult="${'com.cognifide.aem.commons.validation.impl.ValidationResultModel' @ model = model}"
+     data-sly-test="${validationResult.isValid}">
+  <div>
+    <h2>Youtube Clip Component</h2>
+    <iframe data-sly-attribute.width="${model.width}" data-sly-attribute.height="${model.height}" data-sly-attribute.src="${model.url}"
+            width="560" height="315" src="https://www.youtube.com/embed/SmFf_UEA0vo"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+  </div>
+</sly>
+
+<sly data-sly-test="${!validationResult.isValid && wcmmode.edit}"
+     data-sly-use.renderer="/apps/aem-commons/validation/components/displayValidationResult.html"
+     data-sly-call="${renderer.displayValidationResult @ validationResult = validationResult}"/>

@@ -1,0 +1,7 @@
+<sly data-sly-use.model="com.cognifide.aem.training.core.metadata.MetadataModel">
+  <div>
+    <sly data-sly-test="${model.isDescription}">Description: ${model.description}</sly>
+    <sly data-sly-test="${model.isTags}">Tags: ${model.tagsCommaSeparatedList}</sly>
+  </div>
+
+</sly>

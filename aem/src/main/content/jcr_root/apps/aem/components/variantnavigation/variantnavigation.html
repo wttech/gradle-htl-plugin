@@ -1,0 +1,23 @@
+<sly data-sly-use.model="com.cognifide.aem.training.core.variantnavigation.VariantModel"
+     data-sly-use.lib="template.html">
+
+  <div data-sly-test="${model.childrenVariant}" data-sly-unwrap>
+    <div
+        data-sly-call="${lib.navigation @ modelClass='com.cognifide.aem.training.core.variantnavigation.ChildrenVariantModel'}">
+    </div>
+  </div>
+
+  <div data-sly-test="${model.rootVariant}" data-sly-unwrap>
+    <div
+        data-sly-call="${lib.navigation @ modelClass='com.cognifide.aem.training.core.variantnavigation.RootVariantModel'}">
+
+    </div>
+  </div>
+
+  <div data-sly-test="${model.pagesVariant}" data-sly-unwrap>
+    <div
+        data-sly-call="${lib.navigation @ modelClass='com.cognifide.aem.training.core.variantnavigation.PagesVariantModel'}">
+    </div>
+  </div>
+
+</sly>

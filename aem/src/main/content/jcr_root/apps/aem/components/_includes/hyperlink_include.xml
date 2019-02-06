@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:Widget"
+    title="Hyperlink"
+    xtype="fieldset">
+    <items jcr:primaryType="cq:WidgetCollection">
+        <linkAttributes jcr:primaryType="cq:WidgetCollection">
+            <url
+                jcr:primaryType="cq:Widget"
+                path="/apps/training/core/components/_includes/global_path.infinity.json"
+                xtype="cqinclude"/>
+            <targetBlank
+                jcr:primaryType="cq:Widget"
+                boxLabel="Open in new window"
+                name="./hyperlink/targetBlank"
+                type="checkbox"
+                xtype="selection"/>
+            <title
+                jcr:primaryType="cq:Widget"
+                anchor="100%"
+                fieldLabel="Title"
+                name="./hyperlink/title"
+                xtype="textfield"/>
+        </linkAttributes>
+    </items>
+</jcr:root>
