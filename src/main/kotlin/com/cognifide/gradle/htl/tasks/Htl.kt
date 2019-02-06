@@ -3,9 +3,7 @@ package com.cognifide.gradle.htl.tasks
 import com.cognifide.gradle.htl.HtlExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import javax.inject.Inject
 
 open class Htl @Inject constructor(project: Project) : DefaultTask() {
@@ -14,11 +12,16 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
         description = ""
     }
 
-    @InputFiles
-    val htlFiles = project.fileTree(".").filter { it.path.endsWith(".htl") || it.path.endsWith(".html") }
-
     @Internal
-    protected val ext = project.extensions.getByType(HtlExtension::class.java)
+    protected val options = project.extensions.getByType(HtlExtension::class.java)
+
+    @Input
+    val extensions = options.extensionList
+
+    @SkipWhenEmpty
+    @InputFiles
+    val htlFiles = project.fileTree(".").filter { file -> extensions.any { ext -> file.path.endsWith(ext) } }
+
 
     @TaskAction
     fun htl() {

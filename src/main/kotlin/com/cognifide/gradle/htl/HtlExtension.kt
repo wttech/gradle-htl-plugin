@@ -4,10 +4,13 @@ import org.gradle.api.Project
 
 open class HtlExtension(private val project: Project) {
 
+    var extensionList = listOf(".htl")
 
-  companion object {
+    fun extensions(vararg ext: String) {
+        extensionList = ext.toList()
+    }
 
-    const val NAME = "htl"
-
-  }
+    companion object {
+        const val NAME = "htl"
+    }
 }

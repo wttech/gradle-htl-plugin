@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("java-gradle-plugin")
     id("org.jetbrains.kotlin.jvm") version "1.3.20"
@@ -15,7 +13,6 @@ defaultTasks = listOf("build", "publishToMavenLocal")
 repositories {
     mavenLocal()
     jcenter()
-    maven { url = uri("https://dl.bintray.com/neva-dev/maven-public") }
 }
 
 dependencies {
