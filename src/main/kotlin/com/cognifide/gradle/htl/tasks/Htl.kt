@@ -4,6 +4,7 @@ import com.cognifide.gradle.htl.HtlCompiler
 import com.cognifide.gradle.htl.HtlExtension
 import com.cognifide.gradle.htl.HtlValidationException
 import org.apache.sling.scripting.sightly.compiler.CompilationResult
+import org.apache.sling.scripting.sightly.compiler.CompilerMessage
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.*
@@ -42,19 +43,19 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
         compilationResults.forEach { script, result ->
             if (result.warnings.isNotEmpty()) {
                 result.warnings.forEach { message ->
-                    project.logger.warn("w: ${script.path}: (${message.line}, ${message.column}): ${message.message}")
+                    project.logger.warn("w: ${format(script, message)}")
                 }
                 hasWarnings = true
             }
             if (result.errors.isNotEmpty()) {
                 result.errors.forEach { message ->
-                    project.logger.error("e: ${script.path}: (${message.line}, ${message.column}): ${message.message}")
+                    project.logger.error("e: ${format(script, message)}")
                 }
                 hasErrors = true
             }
         }
 
-        project.logger.lifecycle("Processed ${htlFiles.size} files in ${time}ms")
+        project.logger.info("Processed ${htlFiles.size} files in ${time}ms")
 
         if (options.failOnWarnings && hasWarnings) {
             throw HtlValidationException("Compilation warnings were configured to fail the build.")
@@ -63,6 +64,8 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
             throw HtlValidationException("Please check the reported syntax errors.")
         }
     }
+
+    private fun format(script: File, result: CompilerMessage) = "${script.path}: (${result.line}, ${result.column}): ${result.message}"
 
     companion object {
         const val NAME = "htl"
