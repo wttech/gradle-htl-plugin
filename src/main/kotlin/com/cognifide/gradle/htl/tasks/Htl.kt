@@ -6,13 +6,14 @@ import com.cognifide.gradle.htl.HtlValidationException
 import org.apache.sling.scripting.sightly.compiler.CompilationResult
 import org.apache.sling.scripting.sightly.compiler.CompilerMessage
 import org.gradle.api.DefaultTask
-import org.gradle.api.Project
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.SkipWhenEmpty
+import org.gradle.api.tasks.TaskAction
 import java.io.File
-import javax.inject.Inject
 
 
-open class Htl @Inject constructor(project: Project) : DefaultTask() {
+open class Htl : DefaultTask() {
 
     init {
         description = ""
@@ -55,7 +56,7 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
             }
         }
 
-        project.logger.info("Processed ${htlFiles.size} files in ${time}ms")
+        project.logger.lifecycle("Processed ${htlFiles.size} files in ${time}ms")
 
         if (options.failOnWarnings && hasWarnings) {
             throw HtlValidationException("Compilation warnings were configured to fail the build.")

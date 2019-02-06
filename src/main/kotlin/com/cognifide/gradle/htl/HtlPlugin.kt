@@ -3,6 +3,7 @@ package com.cognifide.gradle.htl
 import com.cognifide.gradle.htl.tasks.Htl
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 /**
  * Allows to access encrypted properties.
@@ -16,7 +17,8 @@ open class HtlPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
             extensions.create(HtlExtension.NAME, HtlExtension::class.java)
-            tasks.register(Htl.NAME, Htl::class.java, project)
+            val htl = tasks.register(Htl.NAME, Htl::class.java).get()
+            tasks.findByName(LifecycleBasePlugin.ASSEMBLE_TASK_NAME)?.finalizedBy(htl)
         }
     }
 
