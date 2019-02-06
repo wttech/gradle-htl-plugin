@@ -14,6 +14,7 @@ class HtlCompilerTest {
         //when
         val result = underTest.compileHTLScripts(listOf(validHtlFile))
         //then
-        assertTrue(result.isEmpty())
+        assertTrue(result.get(validHtlFile)!!.warnings.isEmpty())
+        assertTrue(result.get(validHtlFile)!!.errors.isEmpty())
     }
 }
