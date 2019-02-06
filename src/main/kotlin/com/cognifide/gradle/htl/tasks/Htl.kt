@@ -15,16 +15,17 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
     @Internal
     protected val options = project.extensions.getByType(HtlExtension::class.java)
 
-    @Input
-    val extensions = options.extensionList
+    @Internal
+    val extensions = options.extensions
 
     @SkipWhenEmpty
     @InputFiles
-    val htlFiles = project.fileTree(".").filter { file -> extensions.any { ext -> file.path.endsWith(ext) } }
+    val htlFiles = project.fileTree(options.directory).matching { it.include(extensions) }
 
 
     @TaskAction
     fun htl() {
+        project.logger.lifecycle("Welcome to HTL validation!")
         htlFiles.forEach {
             project.logger.lifecycle("${it.path}")
         }

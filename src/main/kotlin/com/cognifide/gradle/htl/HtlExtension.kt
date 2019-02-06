@@ -1,13 +1,16 @@
 package com.cognifide.gradle.htl
 
-import org.gradle.api.Project
+open class HtlExtension {
 
-open class HtlExtension(private val project: Project) {
+    var extensions = listOf("**/*.html", "**/*.htl")
+    var directory = "src/main/content/jcr_root/"
 
-    var extensionList = listOf(".htl")
+    fun extensions(vararg exts: String) {
+        extensions = exts.toList()
+    }
 
-    fun extensions(vararg ext: String) {
-        extensionList = ext.toList()
+    fun directory(dir: String) {
+        directory = dir
     }
 
     companion object {
