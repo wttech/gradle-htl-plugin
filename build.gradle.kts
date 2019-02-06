@@ -38,3 +38,9 @@ gradlePlugin {
         }
     }
 }
+tasks {
+    named<Test>("test") {
+        useJUnitPlatform()
+        dependsOn(named("publishToMavenLocal"))
+    }
+}
