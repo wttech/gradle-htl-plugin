@@ -5,8 +5,9 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
+import javax.inject.Inject
 
-open class Htl(project: Project) : DefaultTask() {
+open class Htl @Inject constructor(project: Project) : DefaultTask() {
 
     init {
         description = ""

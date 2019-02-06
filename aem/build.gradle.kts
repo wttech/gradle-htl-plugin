@@ -5,6 +5,7 @@ plugins {
     id("com.cognifide.aem.bundle")
     id("com.cognifide.aem.instance")
     id("com.neva.fork")
+    id("com.cognifide.gradle.htl")
 }
 
 description = "Basic AEM Project"

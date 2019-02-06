@@ -16,7 +16,7 @@ open class HtlPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
             extensions.create(HtlExtension.NAME, HtlExtension::class.java, project)
-            tasks.register(Htl.NAME, Htl::class.java)
+            tasks.register(Htl.NAME, Htl::class.java, project)
         }
     }
 
