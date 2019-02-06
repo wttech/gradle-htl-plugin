@@ -65,7 +65,7 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
         }
     }
 
-    private fun format(script: File, result: CompilerMessage) = "${script.path}: (${result.line}, ${result.column}): ${result.message}"
+    private fun format(script: File, result: CompilerMessage) = "${script.path}: (${result.line}, ${result.column}): ${result.message.trim()}"
 
     companion object {
         const val NAME = "htl"
