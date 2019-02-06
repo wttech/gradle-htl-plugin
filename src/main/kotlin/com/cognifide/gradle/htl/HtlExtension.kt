@@ -4,6 +4,7 @@ open class HtlExtension {
 
     var extensions = listOf("**/*.html", "**/*.htl")
     var directory = "src/main/content/jcr_root/"
+    var failOnWarnings = false
 
     fun extensions(vararg exts: String) {
         extensions = exts.toList()

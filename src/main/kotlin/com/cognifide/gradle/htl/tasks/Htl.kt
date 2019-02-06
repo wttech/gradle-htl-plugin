@@ -2,11 +2,14 @@ package com.cognifide.gradle.htl.tasks
 
 import com.cognifide.gradle.htl.HtlCompiler
 import com.cognifide.gradle.htl.HtlExtension
+import com.cognifide.gradle.htl.HtlValidationException
+import org.apache.sling.scripting.sightly.compiler.CompilationResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.*
 import java.io.File
 import javax.inject.Inject
+
 
 open class Htl @Inject constructor(project: Project) : DefaultTask() {
 
@@ -27,21 +30,41 @@ open class Htl @Inject constructor(project: Project) : DefaultTask() {
 
     @TaskAction
     fun htl() {
-        project.logger.lifecycle("Welcome to HTL validation!")
+        val startTime = System.currentTimeMillis()
         val results = HtlCompiler(File(options.directory)).compileHTLScripts(htlFiles)
-        results.filterValues { it.errors.isNotEmpty() || it.warnings.isNotEmpty() }.forEach { file, result ->
-            project.logger.lifecycle("${file.path}:")
-            result.errors.forEach {
-                project.logger.lifecycle("ERROR: ${it.message}")
+        val endTime = System.currentTimeMillis()
+        printCompilationResults(results, endTime - startTime)
+    }
+
+    private fun printCompilationResults(compilationResults: Map<File, CompilationResult>, time: Long) {
+        var hasWarnings = false
+        var hasErrors = false
+        compilationResults.forEach { _, result ->
+            if (result.warnings.isNotEmpty()) {
+                result.warnings.forEach { message ->
+                    project.logger.warn("${message.scriptName}: (${message.line}, ${message.column}): warning: ${message.message}")
+                }
+                hasWarnings = true
             }
-            result.warnings.forEach {
-                project.logger.lifecycle("WARNING: ${it.message}")
+            if (result.errors.isNotEmpty()) {
+                result.errors.forEach { message ->
+                    project.logger.error("${message.scriptName}: (${message.line}, ${message.column}): error: ${message.message}")
+                }
+                hasErrors = true
             }
+        }
+
+        project.logger.lifecycle("Processed ${htlFiles.size} files in ${time}ms")
+
+        if (options.failOnWarnings && hasWarnings) {
+            throw HtlValidationException("Compilation warnings were configured to fail the build.")
+        }
+        if (hasErrors) {
+            throw HtlValidationException("Please check the reported syntax errors.")
         }
     }
 
     companion object {
         const val NAME = "htl"
     }
-
 }
