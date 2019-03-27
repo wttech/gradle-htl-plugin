@@ -60,24 +60,6 @@ gradlePlugin {
     }
 }
 tasks {
-    register<Jar>("sourcesJar") {
-        classifier = "sources"
-        dependsOn("classes")
-        from(sourceSets["main"].allSource)
-    }
-
-    named<Task>("build") {
-        dependsOn("sourcesJar")
-    }
-
-    named<Task>("publishToMavenLocal") {
-        dependsOn("sourcesJar")
-    }
-
-    named<ProcessResources>("processResources") {
-        dependsOn("buildJson", "tailerZip")
-    }
-
     named<Test>("test") {
         useJUnitPlatform()
         dependsOn(named("publishToMavenLocal"))

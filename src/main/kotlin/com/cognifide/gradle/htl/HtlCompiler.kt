@@ -28,7 +28,7 @@ constructor(private val sourceDirectory: File) {
 
     fun compileHTLScripts(scripts: List<File>) : Map<File, CompilationResult> {
         val compilationResult = LinkedHashMap<File, CompilationResult>(scripts.size)
-        for (script: File in scripts) {
+        for (script in scripts) {
             val scriptCompilationUnit = ScriptCompilationUnit(sourceDirectory, script)
             compilationResult[script] = compiler.compile(scriptCompilationUnit)
             scriptCompilationUnit.dispose()

@@ -16,19 +16,9 @@
 
 import com.jfrog.bintray.gradle.BintrayExtension
 
-configure<PublishingExtension> {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifact(tasks["sourcesJar"])
-        }
-    }
-}
-
 configure<BintrayExtension> {
     user = (project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER"))?.toString()
     key = (project.findProperty("bintray.key") ?: System.getenv("BINTRAY_KEY"))?.toString()
-    setPublications("mavenJava")
     with(pkg) {
         repo = "maven-public"
         name = "gradle-htl-plugin"
