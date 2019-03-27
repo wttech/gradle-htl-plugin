@@ -1,8 +1,0 @@
-<sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html" />
-<sly data-sly-call="${clientlib.js @ categories='training.currency'}" />
-
-<sly data-sly-use.model="com.cognifide.aem.training.core.currency.CurrencyModel">
-  <div>
-    1 ${model.eurLabel} = <span id="eur-currency-rate">HERE WILL come value from servlet</span>  ${model.plnLabel}, trend is <span id="eur-currency-trend">HERE WILL come value from servlet</span>
-  </div>
-</sly>

@@ -1,2 +1,0 @@
-# mentions all the JavaScript resources of the ClientLib
-currency.js

@@ -1,3 +1,0 @@
-# mentions all the JavaScript resources of the ClientLib
-carousely.js
-siema.min.js

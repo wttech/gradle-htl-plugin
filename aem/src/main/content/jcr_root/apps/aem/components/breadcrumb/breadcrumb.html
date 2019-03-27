@@ -1,9 +1,0 @@
-<sly data-sly-use.model="com.cognifide.aem.training.core.breadcrumb.BreadcrumbModel">
-
-  <sly data-sly-list.parentBreadcrumpEntry="${model.parentsBreadcrumpEntries}">
-    <a href="${parentBreadcrumpEntry.path}" data-sly-test="${!parentBreadcrumpEntryList.last}">${parentBreadcrumpEntry.name}/</a>
-    <sly data-sly-test="${parentBreadcrumpEntryList.last}">${model.currentPageName}</sly>
-  </sly>
-
-
-</sly>
