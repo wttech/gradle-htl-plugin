@@ -2,7 +2,7 @@
 
 [![Gradle Status](https://gradleupdate.appspot.com/Cognifide/gradle-aem-plugin/status.svg?random=123)](https://gradleupdate.appspot.com/Cognifide/gradle-aem-plugin/status)
 [![Apache License, Version 2.0, January 2004](docs/apache-license-badge.svg)](http://www.apache.org/licenses/)
-![Travis Build](https://travis-ci.org/Cognifide/gradle-aem-plugin.svg?branch=develop)
+![Travis Build](https://travis-ci.org/Cognifide/gradle-htl-plugin.svg?branch=master)
 
 # Gradle HTL Plugin
 
