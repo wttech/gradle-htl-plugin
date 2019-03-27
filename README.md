@@ -44,3 +44,7 @@ To run plugin manually simply type `gradlew htl` in commandline.
 # Configuration
 
 WIP
+
+# Licence
+
+**Gradle HTL Plugin** is licensed under the [Apache License, Version 2.0 (the "License")](https://www.apache.org/licenses/LICENSE-2.0.txt)
