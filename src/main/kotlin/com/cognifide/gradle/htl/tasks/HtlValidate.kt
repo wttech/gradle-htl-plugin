@@ -29,10 +29,10 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 
-open class Htl : DefaultTask() {
+open class HtlValidate : DefaultTask() {
 
     init {
-        description = ""
+        description = "Task validating all HTL templates in the project."
     }
 
     @Internal
@@ -85,6 +85,6 @@ open class Htl : DefaultTask() {
     private fun format(script: File, result: CompilerMessage) = "${script.path}: (${result.line}, ${result.column}): ${result.message.trim()}"
 
     companion object {
-        const val NAME = "htl"
+        const val NAME = "htlValidate"
     }
 }

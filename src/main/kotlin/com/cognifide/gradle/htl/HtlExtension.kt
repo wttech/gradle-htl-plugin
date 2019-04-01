@@ -30,7 +30,11 @@ open class HtlExtension {
         directory = dir
     }
 
+    fun failOnWarnings(){
+        failOnWarnings = true
+    }
+
     companion object {
-        const val NAME = "htl"
+        const val NAME = "htlValidation"
     }
 }

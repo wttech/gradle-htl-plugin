@@ -19,12 +19,11 @@ Plugin setup `buildSrc/build.gradle.kts`:
 
 ```kotlin
 repositories {
-    ...
     maven { url = uri("http://dl.bintray.com/cognifide/maven-public") }
 }
 
 dependencies {
-    implementation("com.cognifide.gradle:htl-plugin:0.0.1")
+    implementation("com.cognifide.gradle:htl-plugin:0.0.2")
 }
 ```
 
@@ -33,17 +32,31 @@ Apply plugin in your `build.gradle.kts` script:
 plugins {
     id("com.cognifide.gradle.htl")
 }
+
+plugins.apply("com.cognifide.gradle.htl")
 ```
 
 By default every invocation of Assemble Task will get finalized by validation of all HTL plugins in your project.
 
 ## Running manually
 
-To run plugin manually simply type `gradlew htl` in commandline.
+To run plugin manually simply type `gradlew htlValidate` in commandline.
 
 # Configuration
 
-WIP
+You can configure few things:
+1. Directory where your HTL files are stored (to avoid redundant scanning)
+2. List of supported extensions (files recognized as HTL templates)
+3. Decide if plugin will fail when warning is present. By default it fails only on errors.
+
+Sample configuration (shown values are plugin defaults):
+```kotlin
+htlValidation {
+    directory("src/main/content/jcr_root/")
+    extensions("**/*.html", "**/*.htl")
+    failOnWarnings()
+}
+```
 
 # Licence
 
