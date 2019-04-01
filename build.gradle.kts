@@ -1,6 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 /*
  * Gradle HTL Plugin
  *
@@ -60,10 +57,52 @@ gradlePlugin {
     }
 }
 tasks {
+    register<Jar>("sourcesJar") {
+        classifier = "sources"
+        dependsOn("classes")
+        from(sourceSets["main"].allSource)
+    }
+
+    named<Task>("build") {
+        dependsOn("sourcesJar")
+    }
+
+    named<Task>("publishToMavenLocal") {
+        dependsOn("sourcesJar")
+    }
+
     named<Test>("test") {
         useJUnitPlatform()
         dependsOn(named("publishToMavenLocal"))
     }
 }
 
-apply(from = "gradle/publish.gradle.kts")
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifact(tasks["sourcesJar"])
+        }
+    }
+}
+
+bintray {
+    user = (project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER"))?.toString()
+    key = (project.findProperty("bintray.key") ?: System.getenv("BINTRAY_KEY"))?.toString()
+    setPublications("mavenJava")
+    with(pkg) {
+        repo = "maven-public"
+        name = "gradle-htl-plugin"
+        userOrg = "cognifide"
+        setLicenses("Apache-2.0")
+        vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
+        setLabels("aem", "htl", "validation")
+        with(version) {
+            name = project.version.toString()
+            desc = "${project.description} ${project.version}"
+            vcsTag = project.version.toString()
+        }
+    }
+    publish = (project.findProperty("bintray.publish") ?: "true").toString().toBoolean()
+    override = (project.findProperty("bintray.override") ?: "false").toString().toBoolean()
+}

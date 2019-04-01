@@ -34,7 +34,6 @@ open class HtlPlugin : Plugin<Project> {
         with(project) {
             extensions.create(HtlExtension.NAME, HtlExtension::class.java)
             tasks.register(HtlValidate.NAME, HtlValidate::class.java)
-            tasks.findByName(LifecycleBasePlugin.ASSEMBLE_TASK_NAME)?.finalizedBy(HtlValidate.NAME)
         }
     }
 

@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.cognifide.gradle:htl-plugin:0.0.2")
+    implementation("com.cognifide.gradle:htl-plugin:0.0.1")
 }
 ```
 
@@ -36,11 +36,9 @@ plugins {
 plugins.apply("com.cognifide.gradle.htl")
 ```
 
-By default every invocation of Assemble Task will get finalized by validation of all HTL plugins in your project.
+## Running
 
-## Running manually
-
-To run plugin manually simply type `gradlew htlValidate` in commandline.
+To run plugin simply type `gradlew htlValidate` in commandline.
 
 # Configuration
 
