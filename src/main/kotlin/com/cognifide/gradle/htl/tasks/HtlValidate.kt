@@ -16,7 +16,7 @@ open class HtlValidate : HtlTask() {
     @Internal
     val printIssues = project.objects.property(Boolean::class.java).apply {
         convention(true)
-        project.findProject("htl.printIssues")?.toString()?.toBoolean()?.let { set(it) }
+        project.findProject("htl.validator.printIssues")?.toString()?.toBoolean()?.let { set(it) }
     }
 
     fun printIssues() {
@@ -26,7 +26,7 @@ open class HtlValidate : HtlTask() {
     @Input
     val failOnWarnings = project.objects.property(Boolean::class.java).apply {
         convention(false)
-        project.findProject("htl.failOnWarnings")?.toString()?.toBoolean()?.let { set(it) }
+        project.findProject("htl.validator.failOnWarnings")?.toString()?.toBoolean()?.let { set(it) }
     }
 
     fun failOnWarnings() {
@@ -83,6 +83,7 @@ open class HtlValidate : HtlTask() {
 
     init {
         description = "Validates HTL templates"
+        enabled = project.findProperty("htl.validator.enabled")?.toString()?.toBoolean() ?: true
     }
 
     companion object {
