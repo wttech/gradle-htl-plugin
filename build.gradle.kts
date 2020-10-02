@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "com.cognifide.gradle"
-version = "0.9.0"
+version = "1.0.0"
 description = "Gradle HTL Plugin"
 defaultTasks(":publishToMavenLocal")
 
@@ -51,7 +51,7 @@ gradlePlugin {
             id = "com.cognifide.htl"
             implementationClass = "com.cognifide.gradle.htl.HtlPlugin"
             displayName = "HTL Plugin"
-            description = "Provides HTML Template Engine support."
+            description = "Provides Sling HTL Scripting Engine support"
         }
     }
 }

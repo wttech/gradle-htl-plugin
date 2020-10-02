@@ -2,7 +2,7 @@ package com.cognifide.gradle.htl.compiler
 
 import org.apache.sling.scripting.sightly.compiler.CompilationUnit
 import org.apache.sling.scripting.sightly.compiler.SightlyCompiler
-import java.io.*
+import java.io.File
 
 class ScriptCompilation(
         val script: File,
@@ -12,7 +12,13 @@ class ScriptCompilation(
 
     override fun getScriptName() = script.absolutePath.substring(sourceDir.absolutePath.length)
 
-    override fun getScriptReader() = script.reader().buffered()
+    private val reader by lazy { script.reader().buffered(BUFFER_SIZE) }
 
-    val result by lazy { compiler.compile(this) }
+    override fun getScriptReader() = reader
+
+    val result by lazy { compiler.compile(this).also { reader.close() } }
+
+    companion object {
+        const val BUFFER_SIZE = 16 * 1024
+    }
 }
