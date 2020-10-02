@@ -1,43 +1,42 @@
 package com.cognifide.gradle.htl.tasks
 
-import com.cognifide.gradle.htl.compiler.ScriptCompiler
 import com.cognifide.gradle.htl.HtlException
-import org.apache.sling.scripting.sightly.compiler.CompilationResult
 import org.apache.sling.scripting.sightly.compiler.CompilerMessage
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
 open class HtlValidate : HtlTask() {
 
+    @OptIn(ExperimentalTime::class)
     @TaskAction
     fun validate() {
-//        val startTime = System.currentTimeMillis()
-//        val results = ScriptCompiler(File(options.directory)).compileHTLScripts(htlFiles)
-//        val endTime = System.currentTimeMillis()
-//        printCompilationResults(results, endTime - startTime)
-    }
+        val (compilations, duration) = measureTimedValue { htl.compile() }
 
-  /*  private fun printCompilationResults(compilationResults: Map<File, CompilationResult>, time: Long) {
         var hasWarnings = false
         var hasErrors = false
-        compilationResults.forEach { (script, result) ->
-            if (result.warnings.isNotEmpty()) {
-                result.warnings.forEach { message ->
-                    project.logger.warn("w: ${format(script, message)}")
+        var processed = 0
+
+        compilations.forEach { c ->
+            if (c.result.warnings.isNotEmpty()) {
+                c.result.warnings.forEach { message ->
+                    logger.warn("w: ${format(c.script, message)}")
                 }
                 hasWarnings = true
             }
-            if (result.errors.isNotEmpty()) {
-                result.errors.forEach { message ->
-                    project.logger.error("e: ${format(script, message)}")
+            if (c.result.errors.isNotEmpty()) {
+                c.result.errors.forEach { message ->
+                    logger.error("e: ${format(c.script, message)}")
                 }
                 hasErrors = true
             }
+            processed++
         }
 
-        project.logger.lifecycle("Processed ${htlFiles.size} files in ${time}ms")
+        logger.lifecycle("Processed $processed file(s) in $duration")
 
-        if (options.failOnWarnings && hasWarnings) {
+        if (htl.failOnWarnings.get() && hasWarnings) {
             throw HtlException("Compilation warnings were configured to fail the build.")
         }
         if (hasErrors) {
@@ -50,8 +49,6 @@ open class HtlValidate : HtlTask() {
     init {
         description = "Validates HTL templates"
     }
-
-   */
 
     companion object {
         const val NAME = "htlValidate"
