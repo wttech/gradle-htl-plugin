@@ -16,12 +16,13 @@
 
 package com.cognifide.gradle.htl
 
+import com.cognifide.gradle.htl.compiler.ScriptCompiler
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.File
 
-class HtlCompilerTest {
-    private val underTest = HtlCompiler(File(""))
+class ScriptCompilerTest {
+    private val underTest = ScriptCompiler(File(""))
 
     @Test
     fun whenValidHtl_noErrorReturns() {
