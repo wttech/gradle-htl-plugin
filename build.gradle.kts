@@ -1,30 +1,29 @@
-/*
- * Gradle HTL Plugin
- *
- * Copyright (C) 2019 Cognifide Limited
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     id("java-gradle-plugin")
-    id("org.jetbrains.kotlin.jvm")
-    id("com.jfrog.bintray")
     id("maven-publish")
+    id("org.jetbrains.kotlin.jvm") version "1.3.72"
+    id("org.jetbrains.dokka") version "1.4.0-rc"
+    id("com.gradle.plugin-publish") version "0.11.0"
+    id("io.gitlab.arturbosch.detekt") version "1.7.0"
+    id("com.jfrog.bintray") version "1.8.4"
+    id("net.researchgate.release") version "2.8.1"
+    id("com.github.breadmoirai.github-release") version "2.2.10"
 }
 
 group = "com.cognifide.gradle"
-version = "0.0.1"
+version = "1.0.0"
 description = "Gradle HTL Plugin"
-defaultTasks = listOf("build", "publishToMavenLocal")
+defaultTasks(":publishToMavenLocal")
+
+val functionalTestSourceSet = sourceSets.create("functionalTest")
+gradlePlugin.testSourceSets(functionalTestSourceSet)
+
+configurations.getByName("functionalTestImplementation").apply {
+    extendsFrom(configurations.getByName("testImplementation"))
+}
 
 repositories {
     mavenLocal()
@@ -33,48 +32,107 @@ repositories {
 
 dependencies {
     implementation(gradleApi())
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.21")
+
+    implementation("org.apache.commons:commons-lang3:3.9")
     implementation("commons-io:commons-io:2.6")
+
     implementation("org.apache.sling:org.apache.sling.scripting.sightly.runtime:1.1.0-1.4.0")
     implementation("org.apache.sling:org.apache.sling.scripting.sightly.compiler:1.1.0-1.4.0")
     implementation("org.apache.sling:org.apache.sling.scripting.sightly.compiler.java:1.1.0-1.4.0")
-    implementation("org.apache.commons:commons-lang3:3.5")
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testImplementation(gradleTestKit())
-    testImplementation("org.skyscreamer:jsonassert:1.5.0")
-    testImplementation("org.junit-pioneer:junit-pioneer:0.2.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
+
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.7.0")
 }
 
 gradlePlugin {
     plugins {
         create("htl") {
-            id = "com.cognifide.gradle.htl"
+            id = "com.cognifide.htl"
             implementationClass = "com.cognifide.gradle.htl.HtlPlugin"
+            displayName = "HTL Plugin"
+            description = "Provides Sling HTL Scripting Engine support"
         }
     }
 }
+
 tasks {
     register<Jar>("sourcesJar") {
-        classifier = "sources"
+        archiveClassifier.set("sources")
         dependsOn("classes")
         from(sourceSets["main"].allSource)
     }
 
-    named<Task>("build") {
-        dependsOn("sourcesJar")
+    dokkaJavadoc {
+        outputDirectory = "$buildDir/javadoc"
     }
 
-    named<Task>("publishToMavenLocal") {
-        dependsOn("sourcesJar")
+    register<Jar>("javadocJar") {
+        archiveClassifier.set("javadoc")
+        dependsOn("dokkaJavadoc")
+        from("$buildDir/javadoc")
     }
 
-    named<Test>("test") {
+    withType<JavaCompile>().configureEach{
+        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+        targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    }
+
+    withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_1_8.toString()
+            freeCompilerArgs = freeCompilerArgs + "-Xuse-experimental=kotlin.Experimental"
+        }
+    }
+
+    withType<Detekt>().configureEach {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    build {
+        dependsOn("sourcesJar", "javadocJar")
+    }
+
+    publishToMavenLocal {
+        dependsOn(jar)
+    }
+
+    withType<Test>().configureEach {
+        testLogging.showStandardStreams = true
         useJUnitPlatform()
-        dependsOn(named("publishToMavenLocal"))
     }
+
+    test {
+        dependsOn("detektTest")
+    }
+
+    register<Test>("functionalTest") {
+        testClassesDirs = functionalTestSourceSet.output.classesDirs
+        classpath = functionalTestSourceSet.runtimeClasspath
+
+        useJUnitPlatform()
+        mustRunAfter("test")
+        dependsOn("jar", "detektFunctionalTest")
+        outputs.dir("build/functionalTest")
+    }
+
+    afterReleaseBuild {
+        dependsOn("bintrayUpload", "publishPlugins")
+    }
+
+    named("githubRelease") {
+        mustRunAfter("release")
+    }
+
+    register("fullRelease") {
+        dependsOn("release", "githubRelease")
+    }
+}
+
+detekt {
+    config.from(file("detekt.yml"))
+    parallel = true
+    autoCorrect = true
 }
 
 publishing {
@@ -82,13 +140,21 @@ publishing {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
         }
     }
 }
 
+pluginBundle {
+    website = "https://github.com/Cognifide/gradle-htl-plugin"
+    vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
+    description = "Gradle HTL Plugin"
+    tags = listOf("aem", "sling", "htl", "html", "sightly")
+}
+
 bintray {
-    user = (project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER"))?.toString()
-    key = (project.findProperty("bintray.key") ?: System.getenv("BINTRAY_KEY"))?.toString()
+    user = (findProperty("bintray.user") ?: System.getenv("BINTRAY_USER"))?.toString()
+    key = (findProperty("bintray.key") ?: System.getenv("BINTRAY_KEY"))?.toString()
     setPublications("mavenJava")
     with(pkg) {
         repo = "maven-public"
@@ -96,7 +162,7 @@ bintray {
         userOrg = "cognifide"
         setLicenses("Apache-2.0")
         vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
-        setLabels("aem", "htl", "validation")
+        setLabels("aem", "sling", "htl", "html", "sightly")
         with(version) {
             name = project.version.toString()
             desc = "${project.description} ${project.version}"
@@ -105,4 +171,31 @@ bintray {
     }
     publish = (project.findProperty("bintray.publish") ?: "true").toString().toBoolean()
     override = (project.findProperty("bintray.override") ?: "false").toString().toBoolean()
+}
+
+githubRelease {
+    owner("Cognifide")
+    repo("gradle-htl-plugin")
+    token((findProperty("github.token") ?: "").toString())
+    tagName(project.version.toString())
+    releaseName(project.version.toString())
+    draft((findProperty("github.draft") ?: "false").toString().toBoolean())
+    prerelease((findProperty("github.prerelease") ?: "false").toString().toBoolean())
+    overwrite((findProperty("github.override") ?: "true").toString().toBoolean())
+    gradle.projectsEvaluated { releaseAssets(listOf("jar", "sourcesJar", "javadocJar").map { tasks.named(it) }) }
+
+    body { """
+    |# What's new
+    |
+    |TBD
+    |
+    |# Upgrade notes
+    |
+    |Nothing to do.
+    |
+    |# Contributions
+    |
+    |None.
+    """.trimMargin()
+    }
 }

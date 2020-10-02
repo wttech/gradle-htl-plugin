@@ -1,40 +1,42 @@
-/*
- * Gradle HTL Plugin
- *
- * Copyright (C) 2019 Cognifide Limited
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.cognifide.gradle.htl
 
-open class HtlExtension {
+import com.cognifide.gradle.htl.compiler.ScriptCompiler
+import org.gradle.api.Project
+import org.gradle.api.tasks.util.PatternFilterable
+import java.io.File
 
-    var extensions = listOf("**/*.html", "**/*.htl")
-    var directory = "src/main/content/jcr_root/"
-    var failOnWarnings = false
+open class HtlExtension(private val project: Project) {
 
-    fun extensions(vararg exts: String) {
-        extensions = exts.toList()
+    val sourceDir = project.objects.directoryProperty().apply {
+        convention(project.layout.projectDirectory.dir("src/main/content/jcr_root"))
+        project.findProject("htl.sourceDir")?.toString()?.let { path ->
+            set(project.layout.projectDirectory.dir(path))
+        }
     }
 
-    fun directory(dir: String) {
-        directory = dir
+    fun sourceDir(dir: String) {
+        sourceDir.set(project.layout.projectDirectory.dir(dir))
     }
 
-    fun failOnWarnings(){
-        failOnWarnings = true
+    val sourceFiles get() = project.fileTree(sourceDir).matching(sourceFilter)
+
+    private var sourceFilter: PatternFilterable.() -> Unit = {
+        include("**/*.html", "**/*.htl")
     }
+
+    fun sourceFilter(filter: PatternFilterable.() -> Unit) {
+        this.sourceFilter = filter
+    }
+
+    // Reusable DSL
+
+    val compiler get() = ScriptCompiler()
+
+    fun compile(sourceDir: File, sourceFiles: Iterable<File>) = compiler.compile(sourceDir, sourceFiles)
+
+    fun compile() = compile(sourceDir.get().asFile, sourceFiles)
 
     companion object {
-        const val NAME = "htlValidation"
+        const val NAME = "htl"
     }
 }
