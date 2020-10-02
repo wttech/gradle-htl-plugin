@@ -14,7 +14,6 @@ plugins {
 }
 
 group = "com.cognifide.gradle"
-version = "1.0.0"
 description = "Gradle HTL Plugin"
 defaultTasks(":publishToMavenLocal")
 
