@@ -11,7 +11,7 @@ open class HtlValidate : HtlTask() {
     val sourceDir = htl.sourceFiles
 
     @OutputFile
-    val reportFile = project.objects.fileProperty().convention(project.layout.buildDirectory.file("$name/htl.log"))
+    val reportFile = project.objects.fileProperty().convention(project.layout.buildDirectory.file("$name/report.txt"))
 
     @Internal
     val printIssues = project.objects.property(Boolean::class.java).apply {
@@ -79,7 +79,7 @@ open class HtlValidate : HtlTask() {
         }
     }
 
-    private fun format(script: File, result: CompilerMessage) = "${script.path}: (${result.line}, ${result.column}): ${result.message.trim()}"
+    private fun format(script: File, result: CompilerMessage) = "${script.path}: (${result.line}, ${result.column}):\n${result.message.trim()}"
 
     init {
         description = "Validates HTL templates"
