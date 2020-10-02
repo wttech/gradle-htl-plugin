@@ -5,9 +5,9 @@ import org.apache.sling.scripting.sightly.compiler.SightlyCompiler
 import java.io.File
 
 class ScriptCompilation(
-        val script: File,
-        private val sourceDir: File,
-        private val compiler: SightlyCompiler
+    val script: File,
+    private val sourceDir: File,
+    private val compiler: SightlyCompiler
 ) : CompilationUnit {
 
     override fun getScriptName() = script.absolutePath.substring(sourceDir.absolutePath.length)

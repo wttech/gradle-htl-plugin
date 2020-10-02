@@ -33,6 +33,7 @@ open class HtlValidate : HtlTask() {
         failOnWarnings.set(true)
     }
 
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     @TaskAction
     fun validate() {
         var warnings = 0
