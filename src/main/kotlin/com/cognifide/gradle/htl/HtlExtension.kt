@@ -7,12 +7,15 @@ import java.io.File
 
 open class HtlExtension(private val project: Project) {
 
-    val sourceDir = project.objects.fileProperty().apply {
-        convention(project.layout.projectDirectory.file("src/main/content/jcr_root"))
+    val sourceDir = project.objects.directoryProperty().apply {
+        convention(project.layout.projectDirectory.dir("src/main/content/jcr_root"))
+        project.findProject("htl.sourceDir")?.toString()?.let { path ->
+            set(project.layout.projectDirectory.dir(path))
+        }
     }
 
     fun sourceDir(dir: String) {
-        sourceDir.set(project.layout.projectDirectory.file(dir))
+        sourceDir.set(project.layout.projectDirectory.dir(dir))
     }
 
     val sourceFiles get() = project.fileTree(sourceDir).matching(sourceFilter)
@@ -23,14 +26,6 @@ open class HtlExtension(private val project: Project) {
 
     fun sourceFilter(filter: PatternFilterable.() -> Unit) {
         this.sourceFilter = filter
-    }
-
-    val failOnWarnings = project.objects.property(Boolean::class.java).apply {
-        convention(false)
-    }
-
-    fun failOnWarnings() {
-        failOnWarnings.set(true)
     }
 
     // Reusable DSL
