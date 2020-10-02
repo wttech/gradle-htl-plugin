@@ -146,10 +146,10 @@ publishing {
 }
 
 pluginBundle {
-    website = "https://github.com/Cognifide/gradle-aem-plugin"
-    vcsUrl = "https://github.com/Cognifide/gradle-aem-plugin.git"
-    description = "Gradle AEM Plugin"
-    tags = listOf("aem", "cq", "vault", "scr")
+    website = "https://github.com/Cognifide/gradle-htl-plugin"
+    vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
+    description = "Gradle HTL Plugin"
+    tags = listOf("aem", "sling", "htl", "html", "sightly")
 }
 
 bintray {
@@ -162,7 +162,7 @@ bintray {
         userOrg = "cognifide"
         setLicenses("Apache-2.0")
         vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
-        setLabels("sling", "aem", "htl", "html", "template engine")
+        setLabels("aem", "sling", "htl", "html", "sightly")
         with(version) {
             name = project.version.toString()
             desc = "${project.description} ${project.version}"
