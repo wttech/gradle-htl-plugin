@@ -173,7 +173,7 @@ bintray {
 }
 
 githubRelease {
-    owner("Wunderman Thompson Technology")
+    owner("wttech")
     repo("gradle-htl-plugin")
     token((findProperty("github.token") ?: "").toString())
     tagName(project.version.toString())
