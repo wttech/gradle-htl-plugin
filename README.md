@@ -1,4 +1,4 @@
-![Cognifide logo](https://assets.cognifide.com/github/cognifide-logo.png)
+![WTT logo](docs/wtt-logo.png)
 
 [![Gradle Status](https://gradleupdate.appspot.com/Cognifide/gradle-htl-plugin/status.svg?random=123)](https://gradleupdate.appspot.com/Cognifide/gradle-htl-plugin/status)
 [![Apache License, Version 2.0, January 2004](docs/apache-license-badge.svg)](http://www.apache.org/licenses/)
