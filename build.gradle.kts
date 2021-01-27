@@ -145,8 +145,8 @@ publishing {
 }
 
 pluginBundle {
-    website = "https://github.com/Cognifide/gradle-htl-plugin"
-    vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
+    website = "https://github.com/wttech/gradle-htl-plugin"
+    vcsUrl = "https://github.com/wttech/gradle-htl-plugin.git"
     description = "Gradle HTL Plugin"
     tags = listOf("aem", "sling", "htl", "html", "sightly")
 }
@@ -160,7 +160,7 @@ bintray {
         name = "gradle-htl-plugin"
         userOrg = "cognifide"
         setLicenses("Apache-2.0")
-        vcsUrl = "https://github.com/Cognifide/gradle-htl-plugin.git"
+        vcsUrl = "https://github.com/wttech/gradle-htl-plugin.git"
         setLabels("aem", "sling", "htl", "html", "sightly")
         with(version) {
             name = project.version.toString()
@@ -173,7 +173,7 @@ bintray {
 }
 
 githubRelease {
-    owner("Cognifide")
+    owner("wttech")
     repo("gradle-htl-plugin")
     token((findProperty("github.token") ?: "").toString())
     tagName(project.version.toString())
